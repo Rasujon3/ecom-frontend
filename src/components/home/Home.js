@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getCategories, getProductDetails, getProducts } from '../../api/apiProduct';
+import { getCategories, getFilteredProducts, getProducts } from '../../api/apiProduct';
 import Layout from '../Layout';
 import Card from './Card';
 import { showError, showSuccess } from '../../utils/messages';
@@ -9,10 +9,15 @@ const Home = () => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [limit, setLimit] = useState(30);
+    const [skip, setSkip] = useState(0);
     const [order, setOrder] = useState('desc');
     const [sortBy, setSortBy] = useState('createdAt');
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [filters, setFilters] = useState({
+        category: [],
+        price: []
+    });
 
     useEffect(() => {
         getProducts(sortBy, order, limit)
@@ -23,6 +28,17 @@ const Home = () => {
             .catch(err => setError("Failed to load categories!"));
     }, [])
 
+    const handleFilters = (myFilters, filterBy) => {
+        const newFilters = { ...filters };
+        if (filterBy === 'category') {
+            newFilters[filterBy] = myFilters
+        }
+        setFilters(newFilters);
+        getFilteredProducts(skip, limit, newFilters, order, sortBy)
+            .then(response => setProducts(response.data))
+            .catch(err => setError("Failed to load products"));
+    }
+
     const showFilters = () => {
         return (
             <>
@@ -32,8 +48,11 @@ const Home = () => {
                         <ul>
                             <Checkbox
                                 categories={categories}
+                                handleFilters={myFilters =>
+                                    handleFilters(myFilters, 'category')}
                             />
                         </ul>
+                        {/* {JSON.stringify(filters)} */}
                     </div>
                 </div>
             </>
