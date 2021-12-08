@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { getCategories, getProductDetails, getProducts } from '../../api/apiProduct';
 import Layout from '../Layout';
 import Card from './Card';
-import { showError, showSuccess } from '../../utils/messages'
+import { showError, showSuccess } from '../../utils/messages';
+import Checkbox from './Checkbox';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [limit, setLimit] = useState(30);
     const [order, setOrder] = useState('desc');
     const [sortBy, setSortBy] = useState('createdAt');
@@ -15,11 +17,32 @@ const Home = () => {
     useEffect(() => {
         getProducts(sortBy, order, limit)
             .then(response => setProducts(response.data))
-            .catch(err => setError("Failed to load products!"))
+            .catch(err => setError("Failed to load products!"));
+        getCategories()
+            .then(response => setCategories(response.data))
+            .catch(err => setError("Failed to load categories!"));
     }, [])
+
+    const showFilters = () => {
+        return (
+            <>
+                <div className="row">
+                    <div className="col-sm-3">
+                        <h5>Filter by Categories: </h5>
+                        <ul>
+                            <Checkbox
+                                categories={categories}
+                            />
+                        </ul>
+                    </div>
+                </div>
+            </>
+        )
+    }
 
     return (
         <Layout title="Home Page" className="container-fluid">
+            {showFilters()}
             <div style={{ width: "100%" }}>
                 {showError(error, error)}
                 {showSuccess(success, "Added to cart successfully!")}
