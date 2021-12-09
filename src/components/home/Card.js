@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { API } from '../../utils/config';
 
-const Card = ({ product }) => {
+const Card = ({ product, handleAddToCart }) => {
     const titleStyle = {
         display: "block",
         textOverflow: "ellipsis",
@@ -17,7 +17,7 @@ const Card = ({ product }) => {
         objectPosition: "0px 0px"
     }
     return (
-        <div className="col-md-3 col-sm-4 col-xs-12">
+        <div className="col-md-3 col-sm-4 col-xs-12 mb-3">
             <div className="card">
                 <img
                     src={`${API}/product/photo/${product._id}`}
@@ -35,7 +35,7 @@ const Card = ({ product }) => {
                         <button className="btn btn-outline-warning btn-sm">View Product</button>
                     </Link>
                     {product.quantity ? <>
-                        &nbsp;<button className="btn btn-outline-primary btn-sm" >Add to Cart</button>
+                        &nbsp;<button className="btn btn-outline-primary btn-sm" onClick={handleAddToCart} >Add to Cart</button>
                     </> : ""}
                 </div>
             </div>

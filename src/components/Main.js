@@ -1,15 +1,17 @@
 import { Switch, Route, Redirect } from 'react-router-dom';
 import PrivateRoute from '../components/protecteRoutes/PrivateRoute';
+import AdminRoute from '../components/protecteRoutes/AdminRoute';
 import Home from './home/Home';
 import Login from './user/Login';
 import Register from './user/Register';
+import ProductDetails from './home/ProductDetails';
 import Dashboard from './user/Dashboard';
-import AdminRoute from './protecteRoutes/AdminRoute';
 import AdminDashboard from './admin/adminDashboard';
 import CreateCategory from './admin/CreateCategory';
 import CreateProduct from './admin/CreateProduct';
-import ProductDetails from './home/ProductDetails';
-
+import Cart from './order/Cart';
+import ShippingAddress from './order/ShippingAddress';
+import Checkout from './order/Checkout';
 
 const Main = () => {
     return (
@@ -19,16 +21,25 @@ const Main = () => {
                 <Route path="/login" exact component={Login} />
                 <Route path="/register" exact component={Register} />
                 <Route path="/product/:id" exact component={ProductDetails} />
-                <PrivateRoute path="/user/dashboard">
+                <PrivateRoute exact path="/user/dashboard">
                     <Dashboard />
                 </PrivateRoute>
-                <AdminRoute path="/admin/dashboard">
+                <PrivateRoute exact path="/cart">
+                    <Cart />
+                </PrivateRoute>
+                <PrivateRoute exact path="/shipping">
+                    <ShippingAddress />
+                </PrivateRoute>
+                <PrivateRoute exact path="/checkout">
+                    <Checkout />
+                </PrivateRoute>
+                <AdminRoute exact path="/admin/dashboard">
                     <AdminDashboard />
                 </AdminRoute>
-                <AdminRoute path="/create/category">
+                <AdminRoute exact path="/create/category">
                     <CreateCategory />
                 </AdminRoute>
-                <AdminRoute path="/create/product">
+                <AdminRoute exact path="/create/product">
                     <CreateProduct />
                 </AdminRoute>
                 <Redirect to="/" />
